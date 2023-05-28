@@ -7,6 +7,9 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
+  "scripts":{
+    "start:dev": "nodemon src/index.ts"
+  },
   "name": "arrivo-management-portal-backend",
   "version": "1.0.0",
   "main": "index.js",
