@@ -10,7 +10,7 @@
   "scripts":{
     "start:dev": "nodemon src/index.ts"
   },
-  "name": "arrivo-management-portal-backend",
+  "name": "management-portal-backend",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT"
