@@ -1,13 +1,17 @@
 import { Post, PrismaClient } from '@prisma/client';
 import { Response, Router } from 'express';
 import passport from 'passport';
+const axios = require('axios');
 
 const userRouter:Router = Router();
 const prisma = new PrismaClient();
 
-// Get all posts for user TESTED
+// Set user jwt middleware for all user related routes
+userRouter.use(passport.authenticate('user-jwt', { session: false }));
+
+// Get all posts for user 
 // Had to change req to any type as it will not interfere with the destructuring of req.user
-userRouter.get('/posts', passport.authenticate('user-jwt', { session: false }), async (req:any, res: Response) => {
+userRouter.get('/posts', async (req:any, res: Response) => {
 
 	const {postId} = req.query;
 	if (!req.user) {
@@ -38,25 +42,70 @@ userRouter.get('/posts', passport.authenticate('user-jwt', { session: false }), 
 		console.log(foundPosts);
 		res.send(foundPosts);
 
-}
+	}
 
-try{
-	getPosts()
-	.catch(async (e) => {
-		console.log(e);
-		res.status(500).send('Internal Server Error')
-	})
-}		
-finally{
-	await prisma.$disconnect();
-}
+	try{
+		getPosts()
+		.catch(async (e) => {
+			console.log(e);
+			res.status(500).send('Internal Server Error')
+		})
+	}		
+	finally{
+		await prisma.$disconnect();
+	}
 
 });
 
 // Post the bill of payment to BillPlz
-userRouter.post('/bill', passport.authenticate('user-jwt', { session: false }), (req: any, res: Response) => {
+userRouter.post('/bill', async (req: any, res: Response) => {
   
+	const {sub} = req.user;
 
+	try{
+		const user = await prisma.user.findUnique({
+			where:{
+				id: sub
+			}
+		})
+	
+		// If user is found, proceed to create & post bill to collection
+		if(user){
+			const {
+				id,
+				email,
+				full_name
+			} = user
+
+			const membershipFee:number = 500;
+			const userId = id;
+
+			// Call the billing API from BillPlz
+			const response = await axios.post(
+				'https://www.billplz-sandbox.com/api/v3/bills',
+				{
+					collection_id: process.env.BILLPLZ_COLLECTION_ID,
+					email: email,
+					name: full_name,
+					amount: membershipFee,
+					description: 'Bill for Premium membership',
+					callback_url: `http://localhost/3001/v1/vendors/membership/${userId}`
+				},{
+					headers: {
+						Authorization: `Basic ${process.env.BILLPLZ_API_SECRET_ENCODED}`
+					},
+				}
+			);
+
+			res.json(response.data);
+
+		}
+	}catch(e){
+		console.log(e);
+		res.status(500).send('Internal Server Error')
+	}finally{
+		await prisma.$disconnect();
+	};
 
 });
 

@@ -9,7 +9,10 @@ import { NewUserPassword } from '../interfaces/users-interfaces';
 const adminRouter:Router = Router();
 const prisma = new PrismaClient();
 
-// Create new admin TESTED
+// Set admin jwt middleware for all admin related routes
+adminRouter.use(passport.authenticate('admin-jwt', { session: false }));
+
+// Create new admin 
 adminRouter.post('/', async (req: Request, res: Response) => {
 
 	const {
@@ -61,7 +64,7 @@ adminRouter.post('/', async (req: Request, res: Response) => {
 
 });
 
-// Create new users TESTED
+// Create new users 
 adminRouter.post('/users', async (req: Request, res: Response) => {
 
   const {
@@ -115,7 +118,7 @@ adminRouter.post('/users', async (req: Request, res: Response) => {
 
 });
 
-// Create new Category TESTED
+// Create new Category 
 adminRouter.post('/categories', async (req: Request, res: Response) => {
 
   const {
@@ -152,7 +155,7 @@ adminRouter.post('/categories', async (req: Request, res: Response) => {
 
 });
 
-// Create new posts TESTED
+// Create new posts 
 adminRouter.post('/posts', async (req: Request, res: Response) => {
 
   const {
@@ -195,7 +198,7 @@ adminRouter.post('/posts', async (req: Request, res: Response) => {
 
 
 
-// Get all posts (list all categories) TESTED
+// Get all posts (list all categories) 
 adminRouter.get('/posts', async (req: Request, res: Response) => {
 
 	const {category, label} = req.query;
@@ -235,7 +238,7 @@ adminRouter.get('/posts', async (req: Request, res: Response) => {
 });
 
 
-// Update admin's details / Delete admin TESTED
+// Update admin's details / Delete admin 
 adminRouter.route('/:adminId')
 	.patch( async (req: Request, res: Response) => {
 
@@ -321,7 +324,7 @@ adminRouter.route('/:adminId')
 	});
 
 
-	// Update user's details / Delete user TESTED
+	// Update user's details / Delete user 
 	adminRouter.route('/users/:userId')
 	.patch( async (req: Request, res: Response) => {
 
@@ -408,7 +411,7 @@ adminRouter.route('/:adminId')
 	});
 
 
-// Update post's details / Delete post TESTED
+// Update post's details / Delete post 
 adminRouter.route('/posts/:postId')
 	.patch( async (req: Request, res: Response) => {
 
@@ -479,7 +482,7 @@ adminRouter.route('/posts/:postId')
 
 	});
 
-// Update category's details / Delete category TESTED
+// Update category's details / Delete category 
 adminRouter.route('/categories/:categoryId')
 	.patch( async (req: Request, res: Response) => {
 		
