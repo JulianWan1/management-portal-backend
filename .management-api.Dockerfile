@@ -8,4 +8,4 @@ RUN yarn
 
 COPY . .
 
-CMD yarn && yarn start:dev
+CMD yarn && yarn prisma generate --schema=./database/prisma/schema.prisma && yarn start:dev
