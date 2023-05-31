@@ -8,7 +8,10 @@ const vendorRouter:Router = Router();
 // To update user's membership after Bill was paid for
 vendorRouter.post('/membership', async (req: any, res: Response) => {
 
-	const {userId, id, paid_amount, state} = req.params
+	console.log(`updating membership status & creating payment record...`);
+
+	const {userId} = req.params;
+	const {id, paid_amount, state} = req.body;
 
 	async function updateUserAndCreatePayment(){
 
