@@ -19,7 +19,7 @@ app.use(passport.initialize());
 app.use("/v1/login", loginRouter)
 app.use("/v1/admins", adminRouter);
 app.use("/v1/users", userRouter);
-app.use("/v1/vendor", vendorRouter);
+app.use("/v1/vendors", vendorRouter);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}.`);

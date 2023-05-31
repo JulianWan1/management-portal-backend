@@ -89,7 +89,7 @@ userRouter.post('/bill', async (req: any, res: Response) => {
 					name: full_name,
 					amount: membershipFee,
 					description: 'Bill for Premium membership',
-					callback_url: `<ngrok url that points to http://localhost:3001>/v1/vendors/membership/${userId}` // TODO: Change the url to something that BillPlz can callback on
+					callback_url: `<Set ngrok URL as interface for http://localhost:3001 (ngrok http 3001)>/v1/vendors/membership/${userId}` // TODO: Change the url to something that BillPlz can callback on
 				},{
 					headers: {
 						Authorization: `Basic ${process.env.BILLPLZ_API_SECRET_ENCODED}`
